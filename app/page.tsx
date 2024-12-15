@@ -1,13 +1,10 @@
-import Image from "next/image";
-import Heading from "./Component/Heading";
+import Cardpost from "./Component/Cardpost";
+import HomePlay from "./Component/HomePlay";
 
 export default function Home() {
   return (
-    <div>
-      <Heading />
-      <main>
-        
+      <main className="min-h-screen">
+        <HomePlay />
       </main>
-    </div>
   );
 }
