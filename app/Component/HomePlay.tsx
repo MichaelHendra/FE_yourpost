@@ -1,6 +1,5 @@
 import Image from "next/image";
 import img1 from "@/public/1.png";
-import Sidebar from "./Sidebar";
 import Allpost from "./Allpost";
 
 export default function HomePlay() {
@@ -23,6 +22,9 @@ export default function HomePlay() {
                 <Image src={img1} width={1024} height={720} alt="sangatxd" />
               </div>
             </div>
+          </div>
+          <div className="pt-20">
+            <Allpost />
           </div>
         </div>
       </div>
