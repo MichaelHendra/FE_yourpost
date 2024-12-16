@@ -3,6 +3,7 @@ import Cardpost from "../Component/Cardpost";
 import Videoplayer from "../Component/Videoplayer";
 import pic1 from "@/public/1.png";
 import img2 from "@/public/face.jpg";
+import Comment from "../Component/Comment";
 
 export default function Play() {
   return (
@@ -25,15 +26,21 @@ export default function Play() {
                         width={32}
                         height={32}
                         alt="Profile"
-                        className="rounded-full "
+                        className="rounded-full"
                       />
-                      <p>Mr. kurang turu</p>
+                      <div className="ml-4">
+                        <p className="font-semibold">Mr. kurang turu</p>
+                        <p className="font-thin">69420 followers</p>
+                      </div>
                     </div>
                     <div>
                       <button className="px-6 py-2 font-semibold bg-violet-600 rounded hover:bg-violet-400">
                         Follow
                       </button>
                     </div>
+                  </div>
+                  <div className="pt-6">
+                    <Comment />
                   </div>
                 </div>
 
