@@ -35,7 +35,7 @@ export default function Heading() {
             <input
               type="search"
               id="default-search"
-              className="block w-full p-4 ps-10 text-sm text-gray-900 border border-violet-700 rounded-lg bg-gray-50 focus:ring-violet-700 focus:border-violet-700 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-violet-800 dark:focus:border-violet-800"
+              className="block w-full p-4 ps-10 text-sm text-gray-900 border border-violet-700 rounded-lg bg-gray-50 focus:ring-violet-700 focus:border-violet-700 dark:bg-black dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-violet-800 dark:focus:border-violet-800"
               placeholder="Search Mockups, Logos..."
               required
             />

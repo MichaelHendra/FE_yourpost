@@ -34,7 +34,7 @@ export default function Play() {
                       </div>
                     </div>
                     <div>
-                      <button className="px-6 py-2 font-semibold bg-violet-600 rounded hover:bg-violet-400">
+                      <button type="submit" className="px-6 py-2 font-semibold bg-violet-600 rounded hover:bg-violet-400">
                         Follow
                       </button>
                     </div>
