@@ -1,9 +1,12 @@
 import Image from "next/image";
+import Form from "next/form";
 import Cardpost from "../Component/Cardpost";
 import Videoplayer from "../Component/Videoplayer";
 import pic1 from "@/public/1.png";
 import img2 from "@/public/face.jpg";
 import Comment from "../Component/Comment";
+import Like from "@/public/icons/like.png";
+import Dislike from "@/public/icons/dislike.png";
 
 export default function Play() {
   return (
@@ -32,11 +35,27 @@ export default function Play() {
                         <p className="font-semibold">Mr. kurang turu</p>
                         <p className="font-thin">69420 followers</p>
                       </div>
+                      <div className="ml-4 flex items-center">
+                        <Form action="/">
+                          <button
+                            type="submit"
+                            className="px-6 py-2 font-semibold bg-violet-600 rounded hover:bg-violet-400">
+                            Follow
+                          </button>
+                        </Form>
+                      </div>
                     </div>
-                    <div>
-                      <button type="submit" className="px-6 py-2 font-semibold bg-violet-600 rounded hover:bg-violet-400">
-                        Follow
-                      </button>
+                    <div className="flex items-center justify-center">
+                      <Form action="/">
+                        <div className="px-4 py-2 bg-gray-900 rounded-l-lg hover:bg-violet-500">
+                          <button type="submit"><Image src={Like} width={16} height={16} alt="like"/></button>
+                        </div>
+                      </Form>
+                      <Form action="/">
+                        <div className="px-4 py-2 bg-gray-900 rounded-r-lg hover:bg-violet-500">
+                          <button type="submit"><Image src={Dislike} width={16} height={16} alt="dislike" /></button>
+                        </div>
+                      </Form>
                     </div>
                   </div>
                   <div className="pt-6">

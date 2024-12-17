@@ -1,5 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
+import img2 from "@/public/icons/bell.png";
 export default function Heading() {
   return (
     <div className="p-4 grid grid-cols-4 gap-4">
@@ -49,7 +50,7 @@ export default function Heading() {
         </form>
       </div>
       <div className="flex justify-center items-center gap-4">
-        <Link href="#">Bell</Link>
+        <Link href="#"><Image src={img2} width={16} height={16}  alt="bell"/></Link>
         <Link href="#">Haloo Meaw</Link>
       </div>
     </div>

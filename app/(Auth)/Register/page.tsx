@@ -6,9 +6,9 @@ import BG from "@/public/photos/sangatxd.jpg";
 export default function Register() {
   return (
     <div className="min-h-screen flex justify-center items-center">
-      <div className="flex flex-col md:flex-row justify-center items-center bg-gray-700 p-4">
+      <div className="flex flex-col md:flex-row justify-center items-center bg-gray-700 p-4 rounded">
         <div className="mb-10 md:mb-0 md:mr-10">
-          <Image src={BG} width={350} height={500} alt="login" />
+          <Image src={BG} width={350} height={500} alt="login" className="rounded pl-6"/>
         </div>
         <div>
           <div className="flex justify-center">
@@ -16,7 +16,7 @@ export default function Register() {
               Register
             </h1>
           </div>
-          <div className="pt-4">
+          <div className="pt-4 p-10">
             <Form action="/" className="max-w-sm mx-auto">
             <div className="mb-5">
                 <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
