@@ -3,7 +3,7 @@ import { Credentials,LoginResponse,regisCredentials,regisResponse } from "../Typ
 const apiUrl = process.env.NEXT_PUBLIC_API_URL;
 
 export async function registerUser(credentials: regisCredentials): Promise<regisResponse> {
-    const response = await fetch(`${apiUrl}/register`,{
+    const response = await fetch(`${apiUrl}/auth/register`,{
         method: 'POST',
         headers: {
             'Content-Type' : 'application/json'
@@ -15,7 +15,7 @@ export async function registerUser(credentials: regisCredentials): Promise<regis
 }
 
 export async function loginUser(credentials: Credentials): Promise<LoginResponse> {
-    const response = await fetch(`${apiUrl}/login`,{
+    const response = await fetch(`${apiUrl}/auth/login`,{
         method: 'POST',
         headers:{
             'Content-Type' : 'application/json'

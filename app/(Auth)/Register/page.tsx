@@ -1,43 +1,44 @@
-"use client"
+"use client";
 import Image from "next/image";
-import { FormEvent, useState } from "react";
+import { FormEvent, useEffect, useState } from "react";
 import Link from "next/link";
 import BG from "@/public/photos/sangatxd.jpg";
 import { registerUser } from "@/app/Hook/user";
+import { useRouter } from "next/navigation";
 
 export default function Register() {
-  const [displayname, setDisplayname] = useState<string>('');
-  const [password, setPassword] = useState<string>('');
-  const [email, setEmail] = useState<string>('');
+  const [displayname, setDisplayname] = useState<string>("");
+  const [password, setPassword] = useState<string>("");
+  const [email, setEmail] = useState<string>("");
   const [popupMessage, setPopupMessage] = useState<string | null>(null);
   const [isSuccess, setIsSuccess] = useState<boolean>(false);
+  const router = useRouter();
+
+  useEffect(()=>{
+    const token = localStorage.getItem('token');
+
+    if(token){
+      router.push('/');
+    }
+  },[router]);
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     const response = await registerUser({
       displayname,
+      email,
       password,
-      email
     });
-    if(response.displayname){
+    console.log(response.displayname)
+    if (response.displayname) {
+      
       setIsSuccess(true);
       setPopupMessage("Registrasion Success!");
-      const homeURL = "/";
-      window.location.href = homeURL; 
-    } else if(response.errors){
+      const homeURL = "/login";
+      window.location.href = homeURL;
+    } else {
       setIsSuccess(false);
-      let errorMessage = "";
-      for(const field in response.errors){
-        if(response.errors.hasOwnProperty(field)){
-          response.errors[field].forEach(message => {
-            errorMessage += `${message}\n`;
-          });
-        }
-      }
-      setPopupMessage(errorMessage);
-    } else{
-      setIsSuccess(false);
-      setDisplayname("Failed To Create User !");
+      setPopupMessage("Failed To Create User !");
     }
   };
   const closePopup = () => setPopupMessage(null);
@@ -45,7 +46,13 @@ export default function Register() {
     <div className="min-h-screen flex justify-center items-center">
       <div className="flex flex-col md:flex-row justify-center items-center bg-gray-700 p-4 rounded">
         <div className="mb-10 md:mb-0 md:mr-10">
-          <Image src={BG} width={350} height={500} alt="login" className="rounded pl-6"/>
+          <Image
+            src={BG}
+            width={350}
+            height={500}
+            alt="login"
+            className="rounded pl-6"
+          />
         </div>
         <div>
           <div className="flex justify-center">
@@ -54,7 +61,7 @@ export default function Register() {
             </h1>
           </div>
           <div className="pt-4 p-10">
-          <form onSubmit={handleSubmit} className="max-w-sm mx-auto">
+            <form onSubmit={handleSubmit} className="max-w-sm mx-auto">
               <div className="mb-5">
                 <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
                   Your Name
@@ -117,7 +124,11 @@ export default function Register() {
       </div>
       {popupMessage && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-          <div className={`bg-white p-6 rounded shadow-lg text-center ${isSuccess ? 'text-green-500' : 'text-red-500'}`}>
+          <div
+            className={`bg-white p-6 rounded shadow-lg text-center ${
+              isSuccess ? "text-green-500" : "text-red-500"
+            }`}
+          >
             <h2 className="text-2xl mb-4">{popupMessage}</h2>
             <button
               onClick={closePopup}

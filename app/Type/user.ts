@@ -9,14 +9,12 @@ export type LoginResponse ={
 
 export type regisCredentials = {
     displayname: string;
-    email : string;
+    email: string;
     password: string;
 }
 
 export type regisResponse = {
     displayname?: string;
     email?: string;
-    errors: {
-        [key:string] : string[];
-    }
+    error?: string;
 }
