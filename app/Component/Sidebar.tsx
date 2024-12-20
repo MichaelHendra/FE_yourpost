@@ -7,7 +7,7 @@ import Setting from '@/public/icons/setting.png'
 import Add from '@/public/icons/add.png'
 export default function Sidebar() {
   return (
-    <div className="absolute h-screen w-16 text-white flex flex-col items-center py-4 px-4 space-y-6">
+    <div className="absolute h-screen w-12 lg:w-16 text-white flex flex-col items-center py-4 px-4 space-y-6">
       <div className="container mx-auto">
         <div className="grid grid-rows-1 gap-8">
           <Link href="/">

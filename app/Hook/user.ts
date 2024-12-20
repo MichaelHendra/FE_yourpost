@@ -1,4 +1,4 @@
-import { Credentials,LoginResponse,regisCredentials,regisResponse } from "../Type/user";
+import { Credentials,editCredentials,editResponse,LoginResponse,regisCredentials,regisResponse, userDataResponse } from "../Type/user";
 
 const apiUrl = process.env.NEXT_PUBLIC_API_URL;
 
@@ -23,4 +23,15 @@ export async function loginUser(credentials: Credentials): Promise<LoginResponse
         body: JSON.stringify(credentials)
     });
     return response.json();
+}
+
+export async function userData(id:string): Promise<userDataResponse> {
+    const response = await fetch(`${apiUrl}/auth/user/${id}`,{
+        method: 'GET',
+        headers:{
+            'Content-Type' : 'application/json'
+        },
+    });
+    const data = await response.json();
+    return data.data;
 }

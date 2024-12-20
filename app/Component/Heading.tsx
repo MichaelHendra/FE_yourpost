@@ -1,47 +1,41 @@
 "use client";
 
-import { useState } from "react";
+import { use, useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import img2 from "@/public/icons/bell.png";
 import Form from "next/form";
 
 export default function Heading() {
-  const [dropdownOpen, setDropdownOpen] = useState(false);
+  const [dropdownOpen, setDropdownOpen] = useState<boolean>(false);
+  const [isLogin, setLogin] = useState<boolean>(false);
+  const [isUserId, setUserId] = useState<string>('');
+  
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    const userid = localStorage.getItem('userid');
+    setUserId(userid || '');
+    if(token){
+      setLogin(true);
+    }
+  },[]);
 
   return (
-    <div className="p-4 flex flex-col md:flex-row md:justify-between items-center gap-4">
+    <div className="p-4 flex flex-row md:flex-row md:justify-between items-center gap-4">
       {/* Logo and Title */}
       <div className="flex items-center gap-4">
         <Image src="/logo.png" height={48} width={48} alt="logo" />
-        <p className="text-2xl font-bold">YourPost</p>
+        {/* <p className="text-2xl font-bold sm:hidden">YourPost</p> */}
       </div>
-
-      {/* Navigation Links */}
-      <div className="hidden md:flex justify-center items-center gap-4">
-        <Link href="#" className="relative group font-semibold">
-          Top Post
-          <span className="absolute left-0 bottom-0 h-0.5 w-full scale-x-0 bg-white transition-transform duration-300 group-hover:scale-x-100" />
-        </Link>
-        <Link href="#" className="relative group font-semibold">
-          Top Followers
-          <span className="absolute left-0 bottom-0 h-0.5 w-full scale-x-0 bg-white transition-transform duration-300 group-hover:scale-x-100" />
-        </Link>
-        <Link href="#" className="relative group font-semibold">
-          Trending
-          <span className="absolute left-0 bottom-0 h-0.5 w-full scale-x-0 bg-white transition-transform duration-300 group-hover:scale-x-100" />
-        </Link>
-      </div>
-
       {/* Search Form */}
-      <div className="w-full lg:w-5/12">
+      <div className=" w-8/12 lg:w-6/12">
         <Form action="/" className="max-w-md mx-auto">
           <div className="relative">
             <input
               type="search"
               id="default-search"
               className="block w-full p-2 text-sm text-gray-900 border border-violet-700 rounded-lg focus:ring-violet-700 focus:border-violet-700 dark:bg-black dark:border-gray-600 dark:placeholder-gray-400 dark:text-white"
-              placeholder="Search Mockups, Logos..."
+              placeholder="Search"
               required
             />
             <button
@@ -55,19 +49,13 @@ export default function Heading() {
       </div>
 
       {/* Notification and Dropdown */}
-      <div className="flex flex-col md:flex-row justify-center items-center gap-4 relative">
-        <Link href="#">
-          <Image src={img2} width={24} height={24} alt="bell" />
-        </Link>
-        <Link href="#" className="hidden md:block">
-          Haloo Meaw
-        </Link>
-
+      <div className="flex flex-row justify-center items-center gap-4 relative">
         {/* Dropdown */}
         <div className="relative">
+        { isLogin ?(
           <button
             onClick={() => setDropdownOpen((prev) => !prev)}
-            className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 inline-flex items-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+            className="text-white bg-violet-600 hover:bg-violet-800 font-medium rounded-lg text-sm px-4 py-2 inline-flex items-center dark:bg-violet-600 dark:hover:bg-violet-700 transition-transform duration-100 hover:scale-105"
           >
             Menu
             <svg
@@ -86,13 +74,15 @@ export default function Heading() {
               />
             </svg>
           </button>
-
+        ):(
+          <Link href='/login' className="px-4 py-2 bg-violet-600 hover:bg-violet-300 rounded transition-transform duration-100 hover:scale-105">Login</Link>
+        )}
           {dropdownOpen && (
             <div className="absolute right-0 z-10 mt-2 bg-white divide-y divide-gray-100 rounded-lg shadow-lg w-40 dark:bg-gray-700">
               <ul className="py-2 text-sm text-gray-700 dark:text-gray-200">
                 <li>
                   <Link
-                    href="/profile"
+                    href={`/profile/main/${isUserId}`}
                     className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
                   >
                     Profile

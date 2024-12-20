@@ -34,7 +34,9 @@ export default function Login() {
       setPopupMessage("Login Successs !");
       if (response.token) {
         localStorage.setItem("token", response.token);
+        localStorage.setItem("userid", response.userid);
         console.log(localStorage.getItem("token"));
+        console.log(localStorage.getItem("userid"));
         
       }
       const homeURL = "/";
