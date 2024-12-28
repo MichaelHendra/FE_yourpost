@@ -1,52 +1,60 @@
 "use client";
-import { useRouter } from "next/navigation";
 import Image from "next/image";
+import { FormEvent, useEffect, useState } from "react";
 import Link from "next/link";
 import BG from "@/public/photos/sangatxd.jpg";
-import { FormEvent, useEffect, useState } from "react";
-import { loginUser } from "@/app/Hook/user";
+import { registerUser } from "@/app/Hook/user";
+import { useRouter } from "next/navigation";
+import axios from "axios";
 
-
-export default function Login() {
-  const [email, setEmail] = useState<string>("");
+export default function Register() {
+  const [displayname, setDisplayname] = useState<string>("");
   const [password, setPassword] = useState<string>("");
+  const [email, setEmail] = useState<string>("");
   const [popupMessage, setPopupMessage] = useState<string | null>(null);
   const [isSuccess, setIsSuccess] = useState<boolean>(false);
   const router = useRouter();
-  const closePopup = () => setPopupMessage(null);
 
-  useEffect(() => {
-    const token = localStorage.getItem("token");
+  useEffect(()=>{
+    const token = localStorage.getItem('token');
+
     if(token){
       router.push('/');
     }
-  }, [router]);
+  },[router]);
 
-
-  const handleLogin = async (e: FormEvent) => {
+  const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
-    const response = await loginUser({
-      email,
-      password,
-    });
-    if (response.token) {
-      setIsSuccess(true);
-      setPopupMessage("Login Successs !");
-      if (response.token) {
-        localStorage.setItem("token", response.token);
-        localStorage.setItem("userid", response.userid);
-        console.log(localStorage.getItem("token"));
-        console.log(localStorage.getItem("userid"));
-        
-      }
-      const homeURL = "/";
-      window.location.href = homeURL;
-    } else {
-      setIsSuccess(false);
-      setPopupMessage("Login Failed Email Or Password Is Wrong !");
+    try {
+        const response = await registerUser ({
+            displayname,
+            email,
+            password,
+        });
+        console.log(response.displayname);
+        if (response.displayname) {
+            setIsSuccess(true);
+            setPopupMessage("Registration Success!");
+            const homeURL = "/login";
+            window.location.href = homeURL;
+        } else {
+            setIsSuccess(false);
+            setPopupMessage("Failed To Create User!");
+        }
+    } catch (error) {
+        if (axios.isAxiosError(error)) {
+            // Handle the error response from the server
+            const errorMessage = error.response?.data?.message || "An error occurred. Please try again.";
+            setIsSuccess(false);
+            setPopupMessage(errorMessage);
+        } else {
+            // Handle unexpected errors
+            setIsSuccess(false);
+            setPopupMessage("An unexpected error occurred. Please try again.");
+        }
     }
-  };
-  
+};
+  const closePopup = () => setPopupMessage(null);
   return (
     <div className="min-h-screen flex justify-center items-center">
       <div className="flex flex-col md:flex-row justify-center items-center bg-gray-700 p-4 rounded">
@@ -62,11 +70,25 @@ export default function Login() {
         <div>
           <div className="flex justify-center">
             <h1 className="block mb-2 font-medium text-gray-900 dark:text-white text-5xl">
-              Login
+              Register
             </h1>
           </div>
           <div className="pt-4 p-10">
-            <form onSubmit={handleLogin} className="max-w-sm mx-auto">
+            <form onSubmit={handleSubmit} className="max-w-sm mx-auto">
+              <div className="mb-5">
+                <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                  Your Name
+                </label>
+                <input
+                  type="text"
+                  name="displayname"
+                  value={displayname}
+                  onChange={(e) => setDisplayname(e.target.value)}
+                  className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-black dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                  placeholder="Nama Mu Gan"
+                  required
+                />
+              </div>
               <div className="mb-5">
                 <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
                   Your email
@@ -74,11 +96,10 @@ export default function Login() {
                 <input
                   type="email"
                   name="email"
-                  id="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-black dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                  placeholder="name@ourpost.my.id"
+                  placeholder="name@yourpost.my.id"
                   required
                 />
               </div>
@@ -89,7 +110,6 @@ export default function Login() {
                 <input
                   type="password"
                   name="password"
-                  id="password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-black dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
@@ -102,13 +122,13 @@ export default function Login() {
                   type="submit"
                   className="px-6 py-2 font-semibold bg-violet-600 text-white rounded hover:bg-violet-400"
                 >
-                  Login
+                  Register
                 </button>
                 <Link
-                  href="/register"
-                  className="px-6 py-2 bg-gray-900 hover:bg-violet-500"
+                  href="/login"
+                  className="px-6 py-2 bg-gray-900 text-white hover:bg-violet-500 rounded"
                 >
-                  Register
+                  Login
                 </Link>
               </div>
             </form>
