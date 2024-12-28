@@ -1,31 +1,33 @@
 "use client";
+
 const apiUrl = process.env.NEXT_PUBLIC_API_URL;
+
 import { useState, useEffect } from "react";
 import Cardpost from "./Cardpost";
 import { listVideo } from "../Hook/video";
+import { listVideoAll } from "../Type/video";
 
 export default function Allpost() {
-  const [video, setVideo] = useState<any[]>([]);
+  // Correctly define the type of `video` state as an array
+  const [video, setVideo] = useState<listVideoAll[]>([]);
 
   useEffect(() => {
     listVideo()
-      .then((data) => {
-        setVideo(data);
+      .then((response) => { // Log the entire response
+        setVideo(response.data);
       })
       .catch((error) => {
-        console.error("Error fetching user data:", error);
+        console.error("Error fetching video data:", error);
       });
   }, []);
 
   return (
     <div className="px-10">
       <div className="overflow-hidden">
-        <p className="text-2xl py-4">Recent video</p>
+        <p className="text-2xl py-4">Recent Videos</p>
         <div className="grid grid-cols-1 lg:grid-cols-5 gap-4">
           {video.map((item, index) => {
-            const thumbnailUrl = `${apiUrl}/uploads/thumbnails/${item.thumbnail
-              .split("\\")
-              .pop()}`;
+            const thumbnailUrl = `${apiUrl}/${item.thumbnail?.split("\\").pop()}`;
             return (
               <div key={index} className="flex items-center">
                 <Cardpost
