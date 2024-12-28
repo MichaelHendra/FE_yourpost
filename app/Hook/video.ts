@@ -63,3 +63,9 @@ export async function editVideo(id: string, formData: FormData) {
     });
     return response.data;
   }
+
+  export async function deleteVideo(id: string) {
+    const response = await apiClient.delete(`/videos/delete/${id}`);
+    return response.data;
+    
+  }
