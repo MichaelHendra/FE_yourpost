@@ -55,3 +55,11 @@ export async function videoStore(credentials: videoCredential) {
     });
     return response.data;
 }
+export async function editVideo(id: string, formData: FormData) {
+    const response = await apiClient.put(`/videos/update/${id}`, formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    });
+    return response.data;
+  }
