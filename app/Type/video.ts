@@ -19,3 +19,17 @@ export type playVideoType = {
   followers: bigint,
   photo: string,
 }
+
+export type videoCredential = {
+  id_user: string;
+  title: string;
+  desc_vid: string;
+  thumbnail: File;
+  videos: File;
+};
+export type videoListUser = {
+  id_vid: string,
+  thumbnail : string,
+  title: string,
+  desc_vid: string,
+}

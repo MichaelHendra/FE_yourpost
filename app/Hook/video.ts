@@ -1,6 +1,7 @@
 // const apiUrl = process.env.NEXT_PUBLIC_API_URL;
 
 import apiClient from "../Api/apiClient";
+import { videoCredential } from "../Type/video";
 
 // export async function listVideo() {
 //     const response = await fetch(`${apiUrl}/videos/`,{
@@ -44,5 +45,13 @@ export async function playVideo(id_vid:string) {
 }
 export async function userVideoList(id:string) {
     const response = await apiClient.get(`/videos/video-list/user/${id}`);
+    return response.data;
+}
+export async function videoStore(credentials: videoCredential) {
+    const response = await apiClient.post('/videos/store', credentials,{
+        headers:{
+            'Content-Type': 'multipart/form-data',
+        }
+    });
     return response.data;
 }
