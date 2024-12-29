@@ -1,9 +1,8 @@
 "use client";
 
-import { use, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import img2 from "@/public/icons/bell.png";
 import Form from "next/form";
 
 export default function Heading() {
@@ -19,6 +18,13 @@ export default function Heading() {
       setLogin(true);
     }
   },[]);
+
+  const handleLogout = async () => {
+    localStorage.clear();
+    setLogin(false);
+    const home = '/';
+    window.location.href = home; 
+  }
 
   return (
     <div className="p-4 flex flex-row md:flex-row md:justify-between items-center gap-4">
@@ -97,12 +103,12 @@ export default function Heading() {
                   </Link>
                 </li>
                 <li>
-                  <Link
-                    href="/logout"
-                    className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
+                  <button
+                    onClick={handleLogout}
+                    className=" w-full flex justify-start px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
                   >
                     Sign Out
-                  </Link>
+                  </button>
                 </li>
               </ul>
             </div>
