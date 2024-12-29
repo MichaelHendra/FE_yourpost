@@ -47,7 +47,7 @@ export async function loginUser(credentials: Credentials): Promise<LoginResponse
     return response.data;
 }
 
-export async function userData(id:string): Promise<userDataResponse> {
-    const response = await apiClient.get<userDataResponse>(`/auth/user/${id}`);
+export async function userData(id:string) {
+    const response = await apiClient.get(`/auth/user/${id}`);
     return response.data;
 }

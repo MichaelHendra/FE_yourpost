@@ -22,7 +22,7 @@ export default function Sidebar() {
           <Link href="/settings">
             <Image src={Setting} width={32} height={32} alt="Setting" className="rounded hover:bg-slate-700 hover:bg-opacity-50"/>
           </Link>
-          <Link href="/">
+          <Link href="/settings/video/store">
             <Image src={Add} width={32} height={32} alt="Add Post" className="rounded hover:bg-slate-700 hover:bg-opacity-50"/>
           </Link>
         </div>

@@ -8,11 +8,13 @@ import img2 from "@/public/pp.jpg";
 import Cardpost from "@/app/Component/Cardpost";
 import { userData } from "@/app/Hook/user";
 import { userVideoList } from "@/app/Hook/video";
+import { profileUser } from "@/app/Type/user";
+import { profileVideo } from "@/app/Type/video";
 
 export default function Profile({ params }: { params: Promise<{ detailid: string }> }) {
   const [detailId, setDetailId] = useState<string>("");
-  const [user, setUser ] = useState<any>(null);
-  const [video, setVideo] = useState<any[]>([]); // Initialize as an empty array
+  const [user, setUser ] = useState<profileUser | null>(null);
+  const [video, setVideo] = useState<profileVideo[]>([]); // Initialize as an empty array
   const [loading, setLoading] = useState<boolean>(true);
   const [notFound, setNotFound] = useState<boolean>(false);
 
@@ -43,10 +45,10 @@ export default function Profile({ params }: { params: Promise<{ detailid: string
     if (!detailId) return;
     userVideoList(detailId)
       .then((data) => {
-        setVideo(data);
+        setVideo(data.data);
         setNotFound(data.length === 0); // Set notFound based on the length of data
       })
-      .catch((error) => {
+      .catch(() => {
         setNotFound(true); // Set notFound to true if there's an error
       });
   }, [detailId]);
@@ -109,7 +111,7 @@ export default function Profile({ params }: { params: Promise<{ detailid: string
           ) : (
             <div className="grid grid-cols-1 lg:grid-cols-4">
               {video.map((item, index) => {
-                const thumbnailUrl = `${apiUrl}/uploads/thumbnails/${item.thumbnail.split('\\').pop()}`;
+                const thumbnailUrl = `${apiUrl}/${item.thumbnail.split('\\').pop()}`;
                 return (
                   <Cardpost
                     key={index}

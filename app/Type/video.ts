@@ -4,7 +4,8 @@ export type listVideoAll = {
     title: string;
     displayname: string;
     photo: string;
-  }
+};
+
 export type playVideoType = {
   id_vid :string,
   id_user: string,
@@ -18,7 +19,7 @@ export type playVideoType = {
   displayname: string,
   followers: bigint,
   photo: string,
-}
+};
 
 export type videoCredential = {
   id_user: string;
@@ -27,9 +28,18 @@ export type videoCredential = {
   thumbnail: File;
   videos: File;
 };
+
 export type videoListUser = {
   id_vid: string,
   thumbnail : string,
   title: string,
   desc_vid: string,
+}
+
+export type profileVideo = {
+  id_vid: string,
+  thumbnail : string,
+  title : string,
+  displayname:string,
+  photo: string
 }

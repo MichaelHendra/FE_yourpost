@@ -38,3 +38,11 @@ export type editResponse ={
     displayname?: string;
     error?: string;
 }
+
+export type profileUser = {
+    banner : string,
+    photo : string,
+    displayname: string,
+    followers: bigint,
+    email: string
+}
