@@ -1,3 +1,4 @@
+import { headers } from "next/headers";
 import apiClient from "../Api/apiClient";
 import { Credentials,LoginResponse,regisCredentials,regisResponse, userDataResponse } from "../Type/user";
 
@@ -49,5 +50,13 @@ export async function loginUser(credentials: Credentials): Promise<LoginResponse
 
 export async function userData(id:string) {
     const response = await apiClient.get(`/auth/user/${id}`);
+    return response.data;
+}
+export async function userUpdate(id:string, formData: FormData) {
+    const response = await apiClient.put(`/auth/user/edit/${id}`,formData,{
+        headers:{
+            'Content-Type': 'multipart/form-data',
+        },
+    })
     return response.data;
 }
