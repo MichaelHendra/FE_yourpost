@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 const apiUrl = process.env.NEXT_PUBLIC_API_URL;
 import React, { useEffect, useState } from "react";
@@ -10,13 +10,19 @@ import { userData } from "@/app/Hook/user";
 import { userVideoList } from "@/app/Hook/video";
 import { profileUser } from "@/app/Type/user";
 import { profileVideo } from "@/app/Type/video";
+import Link from "next/link";
 
-export default function Profile({ params }: { params: Promise<{ detailid: string }> }) {
+export default function Profile({
+  params,
+}: {
+  params: Promise<{ detailid: string }>;
+}) {
   const [detailId, setDetailId] = useState<string>("");
-  const [user, setUser ] = useState<profileUser | null>(null);
+  const [user, setUser] = useState<profileUser | null>(null);
   const [video, setVideo] = useState<profileVideo[]>([]); // Initialize as an empty array
   const [loading, setLoading] = useState<boolean>(true);
   const [notFound, setNotFound] = useState<boolean>(false);
+  const [user_Id, setUserId] = useState<string | null>("");
 
   // Unwrap the promise for params
   useEffect(() => {
@@ -24,15 +30,19 @@ export default function Profile({ params }: { params: Promise<{ detailid: string
       const resolvedParams = await params;
       setDetailId(resolvedParams.detailid);
     }
-
     fetchParams();
   }, [params]);
+
+  useEffect(() => {
+    const userId = localStorage.getItem("userid");
+    setUserId(userId);
+  },[]);
 
   useEffect(() => {
     if (!detailId) return;
     userData(detailId)
       .then((data) => {
-        setUser (data);
+        setUser(data.data);
         setLoading(false);
       })
       .catch((error) => {
@@ -54,11 +64,19 @@ export default function Profile({ params }: { params: Promise<{ detailid: string
   }, [detailId]);
 
   if (loading) {
-    return <div className="flex items-center justify-center content-center text-xl">Loading...</div>;
+    return (
+      <div className="flex items-center justify-center content-center text-xl">
+        Loading...
+      </div>
+    );
   }
 
   if (!user) {
-    return <div className="flex items-center justify-center content-center text-xl">No user data found.</div>;
+    return (
+      <div className="flex items-center justify-center content-center text-xl">
+        No user data found.
+      </div>
+    );
   }
 
   return (
@@ -97,21 +115,39 @@ export default function Profile({ params }: { params: Promise<{ detailid: string
                 </p>
               </div>
             </div>
-            <div className="flex gap-2 lg:gap-4 pt-4 lg:ml-12">
-              <button className="px-4 py-1 lg:px-6 lg:py-2 bg-gray-900 rounded-3xl hover:bg-gray-600">
-                Follow
-              </button>
-              <button className="px-6 py-2 bg-black rounded-3xl border hover:bg-gray-900">
-                Join
-              </button>
-            </div>
+            {user_Id === detailId ? (
+              <div className="flex gap-2 lg:gap-4 pt-4 lg:ml-12">
+                <button className="px-4 py-1 lg:px-6 lg:py-2 bg-gray-900 rounded-3xl hover:bg-gray-600">
+                  Manage Profile
+                </button>
+                <Link
+                  href="/settings/video"
+                  className="px-6 py-2 bg-black rounded-3xl border hover:bg-gray-900"
+                >
+                  Manage Video
+                </Link>
+              </div>
+            ) : (
+              <div className="flex gap-2 lg:gap-4 pt-4 lg:ml-12">
+                <button className="px-4 py-1 lg:px-6 lg:py-2 bg-gray-900 rounded-3xl hover:bg-gray-600">
+                  Follow
+                </button>
+                <button className="px-6 py-2 bg-black rounded-3xl border hover:bg-gray-900">
+                  Join
+                </button>
+              </div>
+            )}
           </div>
           {notFound ? (
-            <div className="flex items-center justify-center content-center text-xl pt-4">Not Upload Video Yet!</div>
+            <div className="flex items-center justify-center content-center text-xl pt-4">
+              Not Upload Video Yet!
+            </div>
           ) : (
             <div className="grid grid-cols-1 lg:grid-cols-4">
               {video.map((item, index) => {
-                const thumbnailUrl = `${apiUrl}/${item.thumbnail.split('\\').pop()}`;
+                const thumbnailUrl = `${apiUrl}/${item.thumbnail
+                  .split("\\")
+                  .pop()}`;
                 return (
                   <Cardpost
                     key={index}

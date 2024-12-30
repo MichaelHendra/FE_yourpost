@@ -40,6 +40,7 @@ export type editResponse ={
 }
 
 export type profileUser = {
+    user_id: string,
     banner : string,
     photo : string,
     displayname: string,
