@@ -60,3 +60,8 @@ export async function userUpdate(id:string, formData: FormData) {
     })
     return response.data;
 }
+
+export async function userPassUpdate(id:string, formData: FormData) {
+    const response = await apiClient.put(`/auth/user/pchange/${id}`,formData);
+    return response.data;
+}

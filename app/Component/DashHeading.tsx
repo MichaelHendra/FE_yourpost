@@ -5,6 +5,7 @@ export default function DashHeading(){
             <div className="flex gap-2">
             <Link href="/settings/" className="px-6 py-2 bg-violet-700 hover:bg-violet-500">Dashboard</Link>
             <Link href="/settings/user/edit/" className="px-6 py-2 bg-violet-700 hover:bg-violet-500">Profile</Link>
+            <Link href="/settings/user/password/" className="px-6 py-2 bg-violet-700 hover:bg-violet-500">Password Change</Link>
             <Link href="/settings/video/" className="px-6 py-2 bg-violet-700 hover:bg-violet-500">Video</Link>
             </div>
         </div>
