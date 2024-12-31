@@ -1,11 +1,11 @@
 "use client";
 import orang from "@/public/face.jpg";
 import Image from "next/image";
-import { useEffect, useState } from "react";
+import { FormEvent, useEffect, useState } from "react";
 import { allComment } from "../Type/comment";
-import { ListComment } from "../Hook/comment";
+import { ListComment, postComment } from "../Hook/comment";
 export default function Comment({ id_video }: { id_video: string }) {
-  // const [user_id, setUserId] = useState<string | null>(null);
+  const [user_id, setUserId] = useState<string | null>(null);
   const [comment, setComment] = useState<string>("");
   const [allComment, setAllComment] = useState<allComment[]>([]);
   const [popupMessage, setPopupMessage] = useState<string | null>(null);
@@ -14,12 +14,12 @@ export default function Comment({ id_video }: { id_video: string }) {
 
   useEffect(() => {
     const token = localStorage.getItem("token");
-    // const userId = localStorage.getItem("userid");
+    const userId = localStorage.getItem("userid");
     if (!token) {
       setIsLogin(false);
     } else {
       setIsLogin(true);
-      // setUserId(userId);
+      setUserId(userId);
     }
   }, []);
 
@@ -34,11 +34,39 @@ export default function Comment({ id_video }: { id_video: string }) {
       });
   }, [id_video]);
 
-  const handleComment = () => {
-    if (isLogin == false) {
+  const handleComment = async (e: FormEvent) => {
+    e.preventDefault();
+    if (isLogin == false || !user_id) {
       setPopupMessage("You Must Login First To Comment This Video");
       return;
     }
+    const dataForm = new FormData();
+    
+    dataForm.append('user_id', user_id)
+    dataForm.append('comments', comment)
+    dataForm.append('id_vid', id_video)
+
+    try{
+      const response = await postComment(id_video, dataForm);
+      if(response){
+        setAllComment((prev: allComment[]) => [
+          ...prev,
+          {
+          id_comments: response.data.id_comments,
+          displayname: response.data.displayname,
+          comments: response.data.comments,
+          user_id, // Include user_id
+          id_vid: id_video, // Include id_vid
+          status: "1", // Or another default value
+          },
+        ]);
+        // Clear the comment input field
+        setComment("");
+      }  
+    }catch(e){
+      console.error("Error Post Comment:", e);
+    }
+
   };
   return (
     <div>
@@ -50,7 +78,7 @@ export default function Comment({ id_video }: { id_video: string }) {
         <div className="pt-2 flex">
           <input
             type="text"
-            id="first_name"
+            id="comment"
             name={comment}
             onChange={(e) => setComment(e.target.value)}
             className="bg-gray-50 border-b-4 border-gray-300 text-gray-900 text-sm rounded-l-lg focus:ring-violet-500 focus:border-violet-500 block w-full p-2.5 dark:bg-black dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-violet-500 dark:focus:border-violet-500"
