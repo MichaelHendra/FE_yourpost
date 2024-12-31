@@ -126,7 +126,7 @@ export default function Play({
                       </div>
                     </div>
                     <div className="pt-6">
-                      <Comment />
+                      <Comment id_video={vidId} />
                     </div>
                   </div>
                 )}

@@ -11,10 +11,10 @@ import axios from "axios";
 export default function Login() {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
-  const [popupMessage, setPopupMessage] = useState<string | null>(null);
-  const [isSuccess, setIsSuccess] = useState<boolean>(false);
   const router = useRouter();
   const closePopup = () => setPopupMessage(null);
+  const [popupMessage, setPopupMessage] = useState<string | null>(null);
+  const [isSuccess, setIsSuccess] = useState<boolean>(false);
 
   useEffect(() => {
     const token = localStorage.getItem("token");

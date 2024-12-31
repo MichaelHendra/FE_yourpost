@@ -1,4 +1,3 @@
-import { headers } from "next/headers";
 import apiClient from "../Api/apiClient";
 import { Credentials,LoginResponse,regisCredentials,regisResponse, userDataResponse } from "../Type/user";
 
