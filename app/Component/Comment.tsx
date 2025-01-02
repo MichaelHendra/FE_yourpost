@@ -146,7 +146,7 @@ export default function Comment({ id_video }: { id_video: string }) {
   return (
     <div>
       <div className="flex justify-between">
-        <div>69 Comments</div>
+      <div>{allComment.length} Comments</div>
         <div>Newest</div>
       </div>
       <form onSubmit={handleComment}>
@@ -294,7 +294,7 @@ export default function Comment({ id_video }: { id_video: string }) {
                 placeholder="Comment"
                 required
               />
-              <div className="flex gap-4 mt-4">
+              <div className="flex justify-center gap-4 mt-4">
                 <button
                   type="submit"
                   className="px-4 py-2 bg-gray-800 text-white rounded hover:bg-gray-600"

@@ -2,13 +2,13 @@
 const apiUrl = process.env.NEXT_PUBLIC_API_URL;
 import { useState, useEffect } from "react";
 import Image from "next/image";
-import Form from "next/form";
+import Link from "next/link";
 import Cardpost from "@/app/Component/Cardpost";
 import Videoplayer from "@/app/Component/Videoplayer";
 import img2 from "@/public/pp.jpg";
 import Comment from "@/app/Component/Comment";
-import Like from "@/public/icons/like.png";
-import Dislike from "@/public/icons/dislike.png";
+// import Like from "@/public/icons/like.png";
+// import Dislike from "@/public/icons/dislike.png";
 import { playVideo, listVideo } from "@/app/Hook/video";
 import { listVideoAll, playVideoType } from "@/app/Type/video";
 
@@ -81,24 +81,24 @@ export default function Play({
                           alt="Profile"
                           className="rounded-full"
                         />
-                        <div className="ml-4">
-                          <p className="font-semibold">{video.displayname}</p>
-                          <p className="font-thin">
-                            {video.followers} followers
-                          </p>
-                        </div>
+                        <Link href={`/profile/main/${video.id_user}`}>
+                          <div className="ml-4">
+                            <p className="font-semibold">{video.displayname}</p>
+                            <p className="font-thin">
+                              {video.followers} followers
+                            </p>
+                          </div>
+                        </Link>
                         <div className="ml-4 flex items-center">
-                          <Form action="/">
-                            <button
-                              type="submit"
-                              className="px-6 py-2 font-semibold bg-violet-600 rounded hover:bg-violet-400"
-                            >
-                              Follow
-                            </button>
-                          </Form>
+                          <button
+                            type="submit"
+                            className="px-6 py-2 font-semibold bg-violet-600 rounded hover:bg-violet-400"
+                          >
+                            Follow
+                          </button>
                         </div>
                       </div>
-                      <div className="flex items-center justify-center">
+                      {/* <div className="flex items-center justify-center">
                         <Form action="/">
                           <div className="px-4 py-2 bg-gray-900 rounded-l-lg hover:bg-violet-500">
                             <button type="submit">
@@ -123,7 +123,7 @@ export default function Play({
                             </button>
                           </div>
                         </Form>
-                      </div>
+                      </div> */}
                     </div>
                     <div className="pt-6">
                       <Comment id_video={vidId} />
@@ -136,7 +136,9 @@ export default function Play({
                   <div className="w-full max-w-sm md:max-w-md lg:w-96">
                     <h1 className="font-semibold text-xl"> May You Like :3</h1>
                     {vidCard.map((item, index) => {
-                      const thumbnailUrl = `${apiUrl}/${item.thumbnail.split("\\").pop()}`;
+                      const thumbnailUrl = `${apiUrl}/${item.thumbnail
+                        .split("\\")
+                        .pop()}`;
                       return (
                         <div key={index} className="flex items-center">
                           <Cardpost
