@@ -1,6 +1,11 @@
 import { FormEvent, useEffect, useState, useRef } from "react";
 import { allComment } from "../Type/comment";
-import { ListComment, postComment, updateComment } from "../Hook/comment";
+import {
+  deleteComment,
+  ListComment,
+  postComment,
+  updateComment,
+} from "../Hook/comment";
 import orang from "@/public/face.jpg";
 import Image from "next/image";
 
@@ -14,6 +19,8 @@ export default function Comment({ id_video }: { id_video: string }) {
   const [openMenuId, setOpenMenuId] = useState<string | null>(null);
   const [editPopupId, setEditPopupId] = useState<string | null>(null); // Change here
   const closePopupEdit = () => setEditPopupId(null);
+  const [deletePopupId, setDeletePopupId] = useState<string | null>(null);
+  const closePopUpDelete = () => setDeletePopupId(null);
 
   const dropdownRef = useRef<{ [key: string]: HTMLDivElement | null }>({});
 
@@ -75,12 +82,12 @@ export default function Comment({ id_video }: { id_video: string }) {
 
   const handleUpdateComment = async (e: FormEvent) => {
     e.preventDefault();
-    if(editPopupId === null) return;
+    if (editPopupId === null) return;
     const dataForm = new FormData();
-    dataForm.append('comments', comment);
+    dataForm.append("comments", comment);
 
-    try{
-      const response = await updateComment(editPopupId,dataForm);
+    try {
+      const response = await updateComment(editPopupId, dataForm);
       if (response) {
         setAllComment((prev) =>
           prev.map((item) =>
@@ -92,23 +99,44 @@ export default function Comment({ id_video }: { id_video: string }) {
         setComment("");
         setEditPopupId(null);
       }
-    }catch(e){
-      console.log('Error Updating Comment = ', e)
+    } catch (e) {
+      console.log("Error Updating Comment = ", e);
     }
     closePopupEdit();
+  };
+
+  const handleDeleteComment = async (e: FormEvent) => {
+    e.preventDefault();
+    if (!deletePopupId) return;
+    deleteComment(deletePopupId)
+      .then(() => {
+        setAllComment(
+          allComment.filter(
+            (allComment) => allComment.id_comments !== deletePopupId
+          )
+        );
+        closePopUpDelete();
+      })
+      .catch((e) => {
+        console.error("Error fetching video data:", e);
+      });
   };
 
   const toggleMenu = (id: string) => {
     setOpenMenuId((prev) => (prev === id ? null : id));
   };
-  
+
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      if (dropdownRef.current[openMenuId || '']?.contains(event.target as Node) === false) {
+      if (
+        dropdownRef.current[openMenuId || ""]?.contains(
+          event.target as Node
+        ) === false
+      ) {
         setOpenMenuId(null);
       }
     };
-  
+
     document.addEventListener("mousedown", handleClickOutside);
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
@@ -160,69 +188,78 @@ export default function Comment({ id_video }: { id_video: string }) {
                       </div>
                     </div>
                   </div>
-                  {user_id === item.user_id?(
-                    <div className="relative" ref={(el) => {dropdownRef.current[item.id_comments] = el;}}>
-                    <button
-                      onClick={() => toggleMenu(item.id_comments)}
-                      aria-expanded={openMenuId === item.id_comments}
+                  {user_id === item.user_id ? (
+                    <div
+                      className="relative"
+                      ref={(el) => {
+                        dropdownRef.current[item.id_comments] = el;
+                      }}
                     >
-                      ...
-                    </button>
-                    {openMenuId === item.id_comments && (
-                      <div className="absolute right-0 mt-2 bg-gray-800 text-white rounded-md shadow-lg w-40">
-                        <ul className="py-1 text-sm">
-                          <li>
-                            <button
-                              onClick={() => {
-                                setEditPopupId(item.id_comments); // Set the ID of the comment to edit
-                                setComment(item.comments); // Set the comment text for editing
-                              }}
-                              className="flex items-center w-full px-4 py-1 hover:bg-gray-700"
-                            >
-                              Edit
-                            </button>
-                          </li>
-                          <li>
-                            <button
-                              className="flex items-center w-full px-4 py-1 hover:bg-gray-700"
-                              onClick={() => {
-                                console.log("Delete clicked");
-                              }}
-                            >
-                              Delete
-                            </button>
-                          </li>
-                        </ul>
-                      </div>
-                    )}
-                  </div>
-                  ):(
-                    <div className="relative" ref={(el) => {dropdownRef.current[item.id_comments] = el;}}>
-                    <button
-                      onClick={() => toggleMenu(item.id_comments)}
-                      aria-expanded={openMenuId === item.id_comments}
+                      <button
+                        onClick={() => toggleMenu(item.id_comments)}
+                        aria-expanded={openMenuId === item.id_comments}
+                      >
+                        ...
+                      </button>
+                      {openMenuId === item.id_comments && (
+                        <div className="absolute right-0 mt-2 bg-gray-800 text-white rounded-md shadow-lg w-40">
+                          <ul className="py-1 text-sm">
+                            <li>
+                              <button
+                                onClick={() => {
+                                  setEditPopupId(item.id_comments); // Set the ID of the comment to edit
+                                  setComment(item.comments); // Set the comment text for editing
+                                }}
+                                className="flex items-center w-full px-4 py-1 hover:bg-gray-700"
+                              >
+                                Edit
+                              </button>
+                            </li>
+                            <li>
+                              <button
+                                className="flex items-center w-full px-4 py-1 hover:bg-gray-700"
+                                onClick={() => {
+                                  setDeletePopupId(item.id_comments);
+                                }}
+                              >
+                                Delete
+                              </button>
+                            </li>
+                          </ul>
+                        </div>
+                      )}
+                    </div>
+                  ) : (
+                    <div
+                      className="relative"
+                      ref={(el) => {
+                        dropdownRef.current[item.id_comments] = el;
+                      }}
                     >
-                      ...
-                    </button>
-                    {openMenuId === item.id_comments && (
-                      <div className="absolute right-0 mt-2 bg-gray-800 text-white rounded-md shadow-lg w-40">
-                        <ul className="py-1 text-sm">
-                          <li>
-                            <button
-                              className="flex items-center w-full px-4 py-1 hover:bg-gray-700"
-                              onClick={() => {
-                                console.log("Delete clicked");
-                              }}
-                            >
-                              Report
-                            </button>
-                          </li>
-                        </ul>
-                      </div>
-                    )}
-                  </div>
+                      <button
+                        onClick={() => toggleMenu(item.id_comments)}
+                        aria-expanded={openMenuId === item.id_comments}
+                      >
+                        ...
+                      </button>
+                      {openMenuId === item.id_comments && (
+                        <div className="absolute right-0 mt-2 bg-gray-800 text-white rounded-md shadow-lg w-40">
+                          <ul className="py-1 text-sm">
+                            <li>
+                              <button
+                                className="flex items-center w-full px-4 py-1 hover:bg-gray-700"
+                                onClick={() => {
+                                  console.log("Delete clicked");
+                                }}
+                              >
+                                Report
+                              </button>
+                            </li>
+                          </ul>
+                        </div>
+                      )}
+                    </div>
                   )}
-                  
                 </div>
               </div>
             </div>
@@ -258,7 +295,8 @@ export default function Comment({ id_video }: { id_video: string }) {
                 required
               />
               <div className="flex gap-4 mt-4">
-                <button type="submit"
+                <button
+                  type="submit"
                   className="px-4 py-2 bg-gray-800 text-white rounded hover:bg-gray-600"
                 >
                   Submit
@@ -271,6 +309,27 @@ export default function Comment({ id_video }: { id_video: string }) {
                 </button>
               </div>
             </form>
+          </div>
+        </div>
+      )}
+      {deletePopupId && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+          <div className={`bg-black p-6 rounded shadow-lg text-center`}>
+            <h2 className="text-2xl mb-4">Delete Tour Comment ?</h2>
+            <div className="flex justify-center gap-4">
+              <button
+                onClick={handleDeleteComment}
+                className="px-4 py-2 bg-gray-800 text-white rounded hover:bg-gray-600"
+              >
+                Yes
+              </button>
+              <button
+                onClick={closePopUpDelete}
+                className="px-4 py-2 bg-gray-800 text-white rounded hover:bg-gray-600"
+              >
+                No
+              </button>
+            </div>
           </div>
         </div>
       )}
