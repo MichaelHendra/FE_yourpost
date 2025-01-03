@@ -38,7 +38,6 @@ export default function Comment({ id_video }: { id_video: string }) {
   useEffect(() => {
     ListComment(id_video)
       .then((response) => {
-        console.log(response);
         setAllComment(response.data);
       })
       .catch((err) => {
@@ -100,7 +99,7 @@ export default function Comment({ id_video }: { id_video: string }) {
         setEditPopupId(null);
       }
     } catch (e) {
-      console.log("Error Updating Comment = ", e);
+      console.error("Error Updating Comment = ", e);
     }
     closePopupEdit();
   };

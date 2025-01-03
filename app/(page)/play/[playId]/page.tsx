@@ -1,6 +1,6 @@
 "use client";
 const apiUrl = process.env.NEXT_PUBLIC_API_URL;
-import { useState, useEffect } from "react";
+import { useState, useEffect, FormEvent } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import Cardpost from "@/app/Component/Cardpost";
@@ -11,6 +11,7 @@ import Comment from "@/app/Component/Comment";
 // import Dislike from "@/public/icons/dislike.png";
 import { playVideo, listVideo } from "@/app/Hook/video";
 import { listVideoAll, playVideoType } from "@/app/Type/video";
+import { follow, followUser, unfollow } from "@/app/Hook/follow";
 
 export default function Play({
   params,
@@ -20,6 +21,11 @@ export default function Play({
   const [vidId, setVidId] = useState<string>("");
   const [video, setVideo] = useState<playVideoType | null>(null);
   const [vidCard, setVidCard] = useState<listVideoAll[]>([]);
+  const [isFollowing, setIsFollowing] = useState<boolean>(false);
+  const [isLogin, setIsLogin] = useState<string>("");
+  const [popupLogin, setPopupLogin] = useState<string | null>(null);
+  const closePopLogin = () => setPopupLogin(null);
+  const [follow_id, setFollowId] = useState<string | null>(null);
 
   useEffect(() => {
     async function fetchParams() {
@@ -54,6 +60,99 @@ export default function Play({
         console.error("Error fetching video list:", error);
       });
   }, []);
+
+  useEffect(() => {
+    const user_follow = localStorage.getItem("userid");
+    if (!video) return;
+    if (!user_follow) return;
+    const userFollowingTo = video?.id_user;
+  
+    followUser(userFollowingTo, user_follow)
+      .then((response) => {
+        console.log("Full Response:", response);
+  
+        if (!response.data || response.data.length === 0) {
+          console.log("No followers found.");
+          setIsFollowing(false);
+        } else {
+          const firstRecord = response.data[0]; // Assuming response.data is an array
+          console.log("First Record:", firstRecord);
+          setFollowId(firstRecord?.id_follow || null); // Safely access id_follow
+          console.log("id_follow:", firstRecord?.id_follow);
+          setIsFollowing(true);
+        }
+      })
+      .catch((error) => {
+        console.error("Error fetching Follower data:", error);
+      });
+  }, [video, setFollowId]);
+  
+
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (token) {
+      setIsLogin(token);
+    } else {
+      return;
+    }
+  }, []);
+
+  const handleFollow = async(e:FormEvent) => {
+    e.preventDefault();
+    const user_follow = localStorage.getItem("userid");
+    const userFollowingTo = video?.id_user;
+    if (!isLogin) {
+      setPopupLogin(
+        "Want To Follow This Profile ? Login To Follow This Profile"
+      );
+    }
+    if (!user_follow) return;
+    if (!userFollowingTo) return;
+    const formData = new FormData();
+    formData.append('user_follow', user_follow)
+    formData.append('following_to', userFollowingTo)
+    try{
+      const response = await follow(formData);
+        if(!response.data || response.data.length === 0){
+        setIsFollowing(false);
+        console.error('Failed To Follow Follow')
+      }else{
+        setIsFollowing(true);
+      }
+    }catch(e){
+      console.error("Error Follow Profile:", e);
+    }
+  };
+
+  const hanldeUnFollow = async (e:FormEvent) => {
+    e.preventDefault();
+    if (!isLogin) {
+      setPopupLogin(
+        "Want To Follow This Profile ? Login To Follow This Profile"
+      );
+    }
+    const userFollowingTo1 = video?.id_user;
+
+    if(!follow_id) return;
+    if (!userFollowingTo1) return;
+
+    const formData = new FormData();
+    formData.append('id_follow', follow_id);
+    formData.append('following_to', userFollowingTo1)
+
+    try{
+      const response = await unfollow(formData);
+      if(!response.data || response.data.length === 0){
+        setIsFollowing(false);
+        console.log(response.data);
+      }else{
+        console.log("Success To Unfollow");
+      }
+    }catch(e){
+      console.error('Error Unfollow Profile', e)
+    }
+
+  };
 
   return (
     <div className="min-h-screen">
@@ -90,12 +189,21 @@ export default function Play({
                           </div>
                         </Link>
                         <div className="ml-4 flex items-center">
-                          <button
-                            type="submit"
-                            className="px-6 py-2 font-semibold bg-violet-600 rounded hover:bg-violet-400"
-                          >
-                            Follow
-                          </button>
+                          {!isFollowing ? (
+                            <button
+                              onClick={handleFollow}
+                              className="px-6 py-2 font-semibold bg-violet-600 rounded hover:bg-violet-400"
+                            >
+                              Follow
+                            </button>
+                          ) : (
+                            <button
+                              onClick={hanldeUnFollow}
+                              className="px-6 py-2 font-semibold bg-violet-600 rounded hover:bg-violet-400"
+                            >
+                              UnFollow
+                            </button>
+                          )}
                         </div>
                       </div>
                       {/* <div className="flex items-center justify-center">
@@ -158,6 +266,27 @@ export default function Play({
           </div>
         </div>
       </div>
+      {popupLogin && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+          <div className={`bg-black p-6 rounded shadow-lg text-center`}>
+            <h2 className="text-2xl mb-4">{popupLogin}</h2>
+            <div className="flex justify-center gap-4">
+              <Link
+                href="/login"
+                className="px-4 py-2 bg-gray-800 text-white rounded hover:bg-gray-600"
+              >
+                Login
+              </Link>
+              <button
+                onClick={closePopLogin}
+                className="px-4 py-2 bg-gray-800 text-white rounded hover:bg-gray-600"
+              >
+                No
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
