@@ -16,6 +16,7 @@ export default function Comment({ id_video }: { id_video: string }) {
   const [popupMessage, setPopupMessage] = useState<string | null>(null);
   const closePopup = () => setPopupMessage(null);
   const [isLogin, setIsLogin] = useState<boolean>(false);
+  const [isToken, setToken]=useState<string| null>("");
   const [openMenuId, setOpenMenuId] = useState<string | null>(null);
   const [editPopupId, setEditPopupId] = useState<string | null>(null); // Change here
   const closePopupEdit = () => setEditPopupId(null);
@@ -32,6 +33,7 @@ export default function Comment({ id_video }: { id_video: string }) {
     } else {
       setIsLogin(true);
       setUserId(userId);
+      setToken(token);
     }
   }, []);
 
@@ -47,7 +49,7 @@ export default function Comment({ id_video }: { id_video: string }) {
 
   const handleComment = async (e: FormEvent) => {
     e.preventDefault();
-    if (isLogin == false || !user_id) {
+    if (isLogin == false || !user_id || !isToken) {
       setPopupMessage("You Must Login First To Comment This Video");
       return;
     }
@@ -58,7 +60,7 @@ export default function Comment({ id_video }: { id_video: string }) {
     dataForm.append("id_vid", id_video);
 
     try {
-      const response = await postComment(id_video, dataForm);
+      const response = await postComment(id_video, dataForm, isToken);
       if (response) {
         setAllComment((prev: allComment[]) => [
           ...prev,
@@ -81,12 +83,12 @@ export default function Comment({ id_video }: { id_video: string }) {
 
   const handleUpdateComment = async (e: FormEvent) => {
     e.preventDefault();
-    if (editPopupId === null) return;
+    if (editPopupId === null || !isToken) return;
     const dataForm = new FormData();
     dataForm.append("comments", comment);
 
     try {
-      const response = await updateComment(editPopupId, dataForm);
+      const response = await updateComment(editPopupId, dataForm, isToken);
       if (response) {
         setAllComment((prev) =>
           prev.map((item) =>
@@ -106,8 +108,8 @@ export default function Comment({ id_video }: { id_video: string }) {
 
   const handleDeleteComment = async (e: FormEvent) => {
     e.preventDefault();
-    if (!deletePopupId) return;
-    deleteComment(deletePopupId)
+    if (!deletePopupId || !isToken) return;
+    deleteComment(deletePopupId, isToken)
       .then(() => {
         setAllComment(
           allComment.filter(

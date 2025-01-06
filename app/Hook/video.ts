@@ -43,12 +43,8 @@ export async function playVideo(id_vid:string) {
     const response = await apiClient.get(`/videos/${id_vid}`);
     return response.data;
 }
-export async function userVideoList(id:string, auth:string) {
-    const response = await apiClient.get(`/videos/video-list/user/${id}`,{
-      headers:{
-        'Authorization' : `Bearer ${auth}`
-      }
-    });
+export async function userVideoList(id:string,) {
+    const response = await apiClient.get(`/videos/video-list/user/${id}`);
     return response.data;
 }
 export async function videoStore(credentials: videoCredential, auth:string) {
