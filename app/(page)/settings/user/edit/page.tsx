@@ -4,7 +4,7 @@ import { FormEvent, useEffect, useState } from "react"
 
 export default function EditProfile () {
     const [userId, setUserId] = useState<string | null>(null);
-
+    const [isLogin, setIsLogin] = useState<string | null>(null);
     const [displayname, setDisplayname] = useState<string>('');
     const [email, setEmail] = useState<string>('');
     const [photo, setPhoto] = useState<File | null>(null);
@@ -18,6 +18,7 @@ export default function EditProfile () {
             window.location.href = login
         }else{
             setUserId(user);
+            setIsLogin(token);
         }
     },[]);
 
@@ -34,7 +35,7 @@ export default function EditProfile () {
 
     const handleUpdate = async (e: FormEvent) => {
         e.preventDefault();
-        if (!userId) {
+        if (!userId || !isLogin) {
             window.location.href = "/login";
             return;
         }
@@ -49,7 +50,7 @@ export default function EditProfile () {
             formData.append('banner', banner);
         }
         try{
-            const response = await userUpdate(userId,formData);
+            const response = await userUpdate(userId,formData,isLogin);
             if (response) {
                 window.location.href = `/profile/main/${userId}`;
               }

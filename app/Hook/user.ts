@@ -1,5 +1,5 @@
 import apiClient from "../Api/apiClient";
-import { Credentials,LoginResponse,regisCredentials,regisResponse, userDataResponse } from "../Type/user";
+import { Credentials,LoginResponse,regisCredentials,regisResponse} from "../Type/user";
 
 // const apiUrl = process.env.NEXT_PUBLIC_API_URL;
 
@@ -51,16 +51,21 @@ export async function userData(id:string) {
     const response = await apiClient.get(`/auth/user/${id}`);
     return response.data;
 }
-export async function userUpdate(id:string, formData: FormData) {
+export async function userUpdate(id:string, formData: FormData, auth:string) {
     const response = await apiClient.put(`/auth/user/edit/${id}`,formData,{
         headers:{
             'Content-Type': 'multipart/form-data',
+            'Authorization' : `Bearer ${auth}`
         },
     })
     return response.data;
 }
 
-export async function userPassUpdate(id:string, formData: FormData) {
-    const response = await apiClient.put(`/auth/user/pchange/${id}`,formData);
+export async function userPassUpdate(id:string, formData: FormData, auth:string) {
+    const response = await apiClient.put(`/auth/user/pchange/${id}`,formData,{
+        headers:{
+            'Authorization' : `Bearer ${auth}`
+        }
+    });
     return response.data;
 }

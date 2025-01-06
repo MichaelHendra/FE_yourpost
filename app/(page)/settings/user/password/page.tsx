@@ -5,6 +5,7 @@ import { FormEvent, useEffect, useState } from "react"
 
 export default function UpdatePassword(){
     const [user_id, setUserId] = useState<string | null>(null);
+    const [isLogin, setIsLogin] = useState<string | null>(null);
     const [password, setPassword] = useState<string>("");
     const [confPassword, setConfPassword] = useState<string>("");
     useEffect(() => {
@@ -14,12 +15,13 @@ export default function UpdatePassword(){
             window.location.href = "/login";
         }
         setUserId(userid);
+        setIsLogin(token)
     },[])
 
     const handleUpdate = async (e: FormEvent) => {
         e.preventDefault();
 
-        if(!user_id){
+        if(!user_id || !isLogin){
             window.location.href = '/login'
             return;
         }
@@ -31,7 +33,7 @@ export default function UpdatePassword(){
         formData.append('password',password);
 
         try{
-            const response = await userPassUpdate(user_id, formData);
+            const response = await userPassUpdate(user_id, formData, isLogin);
             if(response){
                 window.location.href = `/profile/main/${user_id}`;
             }
