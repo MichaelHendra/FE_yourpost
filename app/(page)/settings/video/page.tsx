@@ -13,19 +13,22 @@ export default function VideoSetting() {
   const [popupMessage, setPopupMessage] = useState<string | null>(null);
   const closePopup = () => setPopupMessage(null);
   const [id_vid, setIdVid] = useState<string>("");
+  const [isLogin, setIsLogin] = useState<string>("");
 
   useEffect(() => {
     const userId = localStorage.getItem("userid");
-    if (!userId) {
+    const token = localStorage.getItem('token');
+    if (!userId || !token) {
       window.location.href = "/login";
     } else {
       setIdUser(userId);
+      setIsLogin(token);
     }
   }, []);
 
   useEffect(() => {
     if (id_user) {
-      userVideoList(id_user)
+      userVideoList(id_user,isLogin)
         .then((response) => {
           setVideo(response.data);
         })
@@ -33,7 +36,7 @@ export default function VideoSetting() {
           console.error("Error Fetching List Video!:", error);
         });
     }
-  }, [id_user]);
+  }, [id_user,isLogin]);
 
   const handleDeleteMessage = (id: string) => {
     setPopupMessage("Do You Want To Delete Video ?");

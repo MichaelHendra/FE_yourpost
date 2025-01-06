@@ -10,13 +10,16 @@ export default function VideoEdit({ params }: { params: Promise<{ vidid: string 
   const [thumbnail, setThumbnail] = useState<File | null>(null);
   const [videos, setVideo] = useState<File | null>(null);
   const [id_user, setIdUser] = useState<string | null>(null);
+  const [isLogin, setIsLogin] = useState<string | null>(null);
 
   useEffect(() => {
     const userId = localStorage.getItem("userid");
-    if (!userId) {
+    const token = localStorage.getItem("token");
+    if (!userId || !token) {
       window.location.href = "/login";
     } else {
       setIdUser(userId);
+      setIsLogin(token);
     }
   }, []);
 
@@ -48,7 +51,7 @@ export default function VideoEdit({ params }: { params: Promise<{ vidid: string 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
   
-    if (!id_user) {
+    if (!id_user || !isLogin) {
       window.location.href = "/login";
       return;
     }
@@ -71,7 +74,7 @@ export default function VideoEdit({ params }: { params: Promise<{ vidid: string 
     }
   
     try {
-      const response = await editVideo(id_vid, formData); // Send the FormData instance
+      const response = await editVideo(id_vid, formData, isLogin); // Send the FormData instance
       if (response) {
         window.location.href = "/settings/video";
       }

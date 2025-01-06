@@ -43,29 +43,39 @@ export async function playVideo(id_vid:string) {
     const response = await apiClient.get(`/videos/${id_vid}`);
     return response.data;
 }
-export async function userVideoList(id:string) {
-    const response = await apiClient.get(`/videos/video-list/user/${id}`);
+export async function userVideoList(id:string, auth:string) {
+    const response = await apiClient.get(`/videos/video-list/user/${id}`,{
+      headers:{
+        'Authorization' : `Bearer ${auth}`
+      }
+    });
     return response.data;
 }
-export async function videoStore(credentials: videoCredential) {
+export async function videoStore(credentials: videoCredential, auth:string) {
     const response = await apiClient.post('/videos/store', credentials,{
         headers:{
             'Content-Type': 'multipart/form-data',
+            'Authorization' : `Bearer ${auth}`
         }
     });
     return response.data;
 }
-export async function editVideo(id: string, formData: FormData) {
+export async function editVideo(id: string, formData: FormData, auth:string) {
     const response = await apiClient.put(`/videos/update/${id}`, formData, {
       headers: {
         'Content-Type': 'multipart/form-data',
+        'Authorization' : `Bearer ${auth}`
       },
     });
     return response.data;
   }
 
-  export async function deleteVideo(id: string) {
-    const response = await apiClient.delete(`/videos/delete/${id}`);
+  export async function deleteVideo(id: string, auth:string) {
+    const response = await apiClient.delete(`/videos/delete/${id}`,{
+      headers:{
+        'Authorization' : `Bearer ${auth}`
+      }
+    });
     return response.data;
     
   }

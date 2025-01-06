@@ -12,7 +12,8 @@ export default function StoreVideo() {
     e.preventDefault();
 
     const id_user = localStorage.getItem("userid");
-    if (!id_user) {
+    const token = localStorage.getItem("token");
+    if (!id_user || !token) {
       const login = "/login";
       window.location.href = login;
       return;
@@ -29,7 +30,7 @@ export default function StoreVideo() {
         desc_vid,
         thumbnail,
         videos
-      });
+      },token);
       if (response.data) {
         const dashboard = '/settings/video';
         window.location.href = dashboard;
