@@ -1,5 +1,5 @@
 
-export default function Videoplayer ({src, poster}){
+export default function Videoplayer ({src, poster}:{src:string, poster:string}){
     return(
         <div className="max-w-4xl mx-auto">
             <div className="relative w-full overflow-hidden bg-black rounded-lg shadow-lg aspect-video">

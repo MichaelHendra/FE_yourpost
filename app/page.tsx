@@ -1,4 +1,3 @@
-import Cardpost from "./Component/Cardpost";
 import HomePlay from "./Component/HomePlay";
 
 export default function Home() {

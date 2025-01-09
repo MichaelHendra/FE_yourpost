@@ -28,7 +28,7 @@ export default function VideoSetting() {
 
   useEffect(() => {
     if (id_user) {
-      userVideoList(id_user,isLogin)
+      userVideoList(id_user)
         .then((response) => {
           setVideo(response.data);
         })
@@ -45,7 +45,7 @@ export default function VideoSetting() {
 
   const handleDelete = (id_vid: string) => {
     if (id_vid) {
-      deleteVideo(id_vid) // Call the delete function when the user confirms
+      deleteVideo(id_vid,isLogin) // Call the delete function when the user confirms
         .then(() => {
           setVideo(videos.filter((video) => video.id_vid !== id_vid));
           closePopup() // This removes the deleted video from the list

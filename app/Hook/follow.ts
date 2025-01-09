@@ -5,12 +5,20 @@ export async function followUser(id:string,user_follow:string) {
     return response.data;
 }
 
-export async function follow(formData:FormData) {
-    const response = await apiClient.post('/follow/following', formData)
+export async function follow(formData:FormData, auth:string) {
+    const response = await apiClient.post('/follow/following', formData,{
+        headers:{
+            'Authorization' : `Bearer ${auth}`
+        }
+    })
     return response.data;
 }
 
-export async function unfollow(formData:FormData) {
-    const response = await apiClient.post(`/follow/unfollow`, formData)
+export async function unfollow(formData:FormData, auth:string) {
+    const response = await apiClient.post(`/follow/unfollow`, formData, {
+        headers:{
+            'Authorization' : `Bearer ${auth}`
+        }
+    })
     return response.data;
 }
